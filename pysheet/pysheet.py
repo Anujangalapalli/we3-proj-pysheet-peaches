@@ -1,16 +1,9 @@
-
 import pickle
 import tkinter as tk
 import re
 from collections import ChainMap
 import math
 import yaml
-import json
-
-from tkinter.filedialog import asksaveasfile
-
-
-#from numpy import save
 
 Nrows = 5
 Ncols = 5
@@ -59,13 +52,11 @@ class Cell():
         self.var.set(self.value)
         # and you're done.
 
-
-
     def move(self, rowadvance, coladvance):
         targetrow = (self.row + rowadvance) % Nrows
         targetcol = (self.col + coladvance) % Ncols
 
-        def focus(self, event):
+        def focus(event):
             targetwidget = self.siblings[cellname(targetrow, targetcol)].widget
             targetwidget.focus()
 
@@ -138,37 +129,23 @@ class SpreadSheet(tk.Frame):
         self.create_widgets()
 
     def save1(self, filename):
-        print(self.cells)
         data = {}
         for key in self.cells:
-            data[key] = self.cells[key].value
+            data[key] = [self.cells[key].value, self.cells[key].formula]
 
         with open(filename, 'w') as outfile:
             yaml.dump(data, outfile)
 
     def create_widgets(self):
         # Frame for all the cells
-        # tk.Button(text='Fetch').grid()
         self.cellframe = tk.Frame(self)
         self.cellframe.pack(side='top')
 
-        # self.B = tk.Butt
-
-
-        """files = [('All Files', '*.*'),
-                 ('Python Files', '*.py'),
-                 ('Text Document', '*.txt')]
-"""
-
         self.B = tk.Button(root, text="Save", command=lambda: self.save1('test.yaml'))
-        # Cell.save1(self, [self.rows, self.cols] , 'test.pickle'
-        # (asksaveasfile(filetypes=files, defaultextension=files))
         self.C = tk.Button(root, text="Load")
 
         self.B.pack()
         self.C.pack()
-
-
 
         # Column labels
         blank = tk.Label(self.cellframe)
@@ -187,11 +164,7 @@ class SpreadSheet(tk.Frame):
                 cell.widget.grid(row=1 + i, column=1 + j)
 
 
-
-
 root = tk.Tk()
 app = SpreadSheet(Nrows, Ncols, master=root)
-
-
 
 app.mainloop()
